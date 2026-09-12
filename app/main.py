@@ -1,7 +1,15 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
+from app.exceptionHandler import PlcException, plc_exception_handler
 
 app = FastAPI(title="FastAPI Practice")
+
+# 전역 Exception 등록
+app.add_exception_handler(
+    PlcException,
+    plc_exception_handler,
+)
+
 
 
 class PlcCommand(BaseModel):
@@ -27,18 +35,19 @@ def get_plc_status():
 @app.get("/plc/{device_id}")
 def get_plc(device_id: int):
 
+    print("device_id",device_id)
+
     if device_id <= 0:
-        raise HTTPException(
-            status_code=400,
-            detail="device_id는 1 이상이어야 합니다."
+        raise PlcException(
+            "잘못된 PLC 번호입니다.",
+            400,
         )
-
+    
     if device_id == 999:
-        raise HTTPException(
-            status_code=404,
-            detail="PLC를 찾을 수 없습니다."
+        raise PlcException(
+            "PLC 연결 실패",
+            503,
         )
-
     return {"device_id": device_id, "status": "RUNNING"}
 
 
