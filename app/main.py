@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI(title="FastAPI Practice")
@@ -26,6 +26,19 @@ def get_plc_status():
 
 @app.get("/plc/{device_id}")
 def get_plc(device_id: int):
+
+    if device_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="device_id는 1 이상이어야 합니다."
+        )
+
+    if device_id == 999:
+        raise HTTPException(
+            status_code=404,
+            detail="PLC를 찾을 수 없습니다."
+        )
+
     return {"device_id": device_id, "status": "RUNNING"}
 
 
@@ -35,4 +48,15 @@ def send_command(command: PlcCommand):
         "message": "Command received",
         "device_id": command.device_id,
         "running": command.running,
+    }
+
+
+@app.get("/plc")
+def get_plcs(status: str = "ALL"):
+    return {
+        "status": status,
+        "devices": [
+            {"device_id": 1, "name": "PLC-A"},
+            {"device_id": 2, "name": "PLC-B"},
+        ],
     }
