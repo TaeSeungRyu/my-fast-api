@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from app.exceptionHandler import PlcException, plc_exception_handler
+from app.exception_handler import PlcException, plc_exception_handler
 
 app = FastAPI(title="FastAPI Practice")
 
