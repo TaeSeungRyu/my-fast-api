@@ -41,7 +41,7 @@ pip install -r requirements.txt
 ## 실행
 
 ```powershell id="ud25qk"
-uvicorn app.main:app --reload
+uvicorn app.main:app --env-file ./app/.env --reload
 ```
 
 또는

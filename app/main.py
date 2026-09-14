@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from app.exception_handler import PlcException, plc_exception_handler
+import os
 
-app = FastAPI(title="FastAPI Practice")
+ENV = os.getenv("ENV", "local")
+
+is_prod = ENV == "production"
+
+app = FastAPI(
+    docs_url=None if is_prod else "/docs",
+    redoc_url=None if is_prod else "/redoc",
+    openapi_url=None if is_prod else "/openapi.json",
+)
 
 # 전역 Exception 등록
 app.add_exception_handler(
