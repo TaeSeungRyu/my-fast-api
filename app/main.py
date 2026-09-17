@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.routers.device import router as device_router
+from app.routers.user_router import router as user_router
 from app.exception_handler import PlcException, plc_exception_handler
 import os
 
@@ -21,3 +22,4 @@ app.add_exception_handler(
 
 # router 등록
 app.include_router(device_router)
+app.include_router(user_router)
